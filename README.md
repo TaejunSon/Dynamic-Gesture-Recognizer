@@ -1,6 +1,6 @@
 # Dynamic Gesture Recognizer
 
-**[1] Two hand model in project **
+**[1] Two hand model in project**
 1. OVRCameraRig -> TrackingSpace -> RightHandAnchor
 From this model extract hand skeleton data and by using this, tracking index finger tip and make history of index finger tip
 
