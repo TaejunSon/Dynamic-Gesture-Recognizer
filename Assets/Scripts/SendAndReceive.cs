@@ -19,7 +19,7 @@ public class SendAndReceive : MonoBehaviour
     TcpClient client;
     Vector3 sendPos = Vector3.zero;
     bool running;
-    bool sending;
+    
     bool Down = false;
     bool up = false;
     bool right = false;
@@ -31,32 +31,34 @@ public class SendAndReceive : MonoBehaviour
     private Renderer CubeRenderer;
 
 
-    private IEnumerator coroutine;
+    static public int DownCount = 0;
     private void Awake()
     {
-        coroutine = normalizePosition();
-        StartCoroutine(coroutine);
+        sendPos = transform.position;
         CubeRenderer = GetComponent<Renderer>();
         mThread = new Thread(new ThreadStart(GetInfo));
         mThread.Start();
-
     }
 
     private void Update()
     {
+        sendPos = transform.position;
+
         Renderer cylinderRenderer = cylinder.GetComponent<Renderer>();
         Renderer sphereRenderer = sphere.GetComponent<Renderer>();
 
+
         // Status log from Classify Data
         if (CylinderGrab.CylinderGrabbed)
-        {
-            if (Down)
+            {
+                if (Down)
             {
                 //CubeRenderer.material.color = Color.black;
                 //Down = false;
                 cylinderRenderer.material.color = Color.black;
                 GestureRecognizer.text = "Down";
                 Down = false;
+                DownCount++;
             }
             if (up)
             {
@@ -65,8 +67,8 @@ public class SendAndReceive : MonoBehaviour
                 cylinderRenderer.material.color = Color.green;
                 GestureRecognizer.text = "Up";
                 up = false;
-
             }
+            /*
             if (right)
             {
                 cylinderRenderer.material.color = Color.red;
@@ -79,6 +81,7 @@ public class SendAndReceive : MonoBehaviour
                 GestureRecognizer.text = "left";
                 left = false;
             }
+            */
         }
         else if (SphereGrab.SphereGrabbed)
         {
@@ -118,58 +121,60 @@ public class SendAndReceive : MonoBehaviour
 
         while (running)
         {
-            if (sending)
+            if (ObjectCollision.Collision)
             {
                 // Convert the float values to byte array and send
                 float[] floatsToSend = { (float)sendPos.x, (float)sendPos.y };
                 byte[] send = new byte[8]; // 2 floats * 4 bytes each = 8 bytes
                 System.Buffer.BlockCopy(floatsToSend, 0, send, 0, 8);
                 nwStream.Write(send, 0, send.Length);
-
-                byte[] buffer = new byte[4];
-                int bytesRead = nwStream.Read(buffer, 0, buffer.Length);
-                if (bytesRead <= 0)
-                {
-                    continue;
-                }
-                int message = BitConverter.ToInt32(buffer, 0);
-                if (message == 4)
-                {
-                    up = true;
-
-                }
-                else if (message == 5)
-                {
-                    Down = true;
-                }
-                else if (message == 6)
-                {
-                    right = true;
-                }
-                else if (message == 7)
-                {
-                    left = true;
-                }
-                else if (message == 1)
-                {
-                    clockwise = true;
-                }
-                else if (message == 2)
-                {
-                    counterclockwise = true;
-                }
             }
-            sending = false;
-        }
-    }
-    private IEnumerator normalizePosition()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.03f);
-            sendPos = transform.position;
-            sending = true;
+            else
+            {
+                float[] floatsToSend = { -1000.0f, 0.0f };
+                byte[] send = new byte[8]; // 2 floats * 4 bytes each = 8 bytes
+                System.Buffer.BlockCopy(floatsToSend, 0, send, 0, 8);
+                nwStream.Write(send, 0, send.Length);
+            }
 
+            byte[] buffer = new byte[4];
+            int bytesRead = nwStream.Read(buffer, 0, buffer.Length);
+            Debug.Log("Receiving is okay");
+            if (bytesRead <= 0)
+            {
+               continue;
+            }
+            int message = BitConverter.ToInt32(buffer, 0);
+            if (message == 4)
+            {
+                up = true;
+
+            }
+            else if (message == 5)
+            {
+                Down = true;
+            }
+            else if (message == 6)
+            {
+                right = true;
+            }
+            else if (message == 7)
+            {
+                left = true;
+            }
+            else if (message == 1)
+            {
+                clockwise = true;
+            }
+            else if (message == 2)
+            {
+                counterclockwise = true;
+            }
+            else
+            {
+                continue;
+            }
         }
     }
+
 }

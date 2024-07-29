@@ -20,11 +20,8 @@ public class HandTrackingScript : MonoBehaviour
     private Queue<float> pre_process_history;
     private int maxLength = 16;
 
-    private IEnumerator coroutine;
     void Start()
     {
-        coroutine = FrameSet();
-        StartCoroutine(coroutine);
         transform.position = sceneCamera.transform.position + sceneCamera.transform.forward * 1.0f;
         positionHistory = new Queue<Vector3>(maxLength);
         trackingPoints = new List<GameObject>(maxLength);
@@ -93,11 +90,5 @@ public class HandTrackingScript : MonoBehaviour
             pre_process_history.Enqueue(pos.y);  
         }
     }
-    private IEnumerator FrameSet()
-    {
-        while(true)
-        {
-            yield return new WaitForSeconds(0.03f);
-        }
-    }
+
 }
