@@ -28,7 +28,7 @@ public class CylinderGrab : MonoBehaviour
                 {
                     if (b.Id == OVRSkeleton.BoneId.Hand_Middle3)    
                     {
-                        objectPosition = new Vector3(b.Transform.position.x - 0.05f, b.Transform.position.y, b.Transform.position.z);
+                        objectPosition = new Vector3(b.Transform.position.x-0.05f, b.Transform.position.y, b.Transform.position.z);
                         transform.position = objectPosition;
                     }
                 }

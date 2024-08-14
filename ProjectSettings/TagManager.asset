@@ -7,6 +7,7 @@ TagManager:
   - Grabbable
   - Hand
   - Object
+  - Tapping
   layers:
   - Default
   - TransparentFX
