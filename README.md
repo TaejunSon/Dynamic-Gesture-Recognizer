@@ -11,4 +11,4 @@ Tutorial : https://www.youtube.com/watch?v=D8_vdJG0UZ8
 
 2. Cube (1) 
 Tracking system for Hand Tip
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/9eee4a45-aba4-48b0-9a84-fc0e61822413/6d54d15d-c884-48c7-8e34-30eb038bf929/Untitled.png)
+![Untitled (5)](https://github.com/user-attachments/assets/a046564a-2e96-4926-a99e-d8d2604e2d8e)
